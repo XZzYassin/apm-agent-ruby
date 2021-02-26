@@ -27,9 +27,9 @@ module ElasticAPM
           alias call_without_apm call
 
           def call(command, &block)
-            name = command[0].upcase
+            name = command[0].is_a?(Array) ? command[0][0].upcase : command[0].upcase
 
-            return call_without_apm(command, &block) if command[0] == :auth
+            return call_without_apm(command, &block) if name == :auth
 
             ElasticAPM.with_span(name.to_s, 'db.redis') do
               call_without_apm(command, &block)
